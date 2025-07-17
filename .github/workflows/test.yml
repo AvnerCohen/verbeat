@@ -106,22 +106,4 @@ jobs:
       working-directory: implementations/python
       run: |
         make help
-        make clean
-
-  deploy:
-    name: Deploy Website
-    runs-on: ubuntu-latest
-    needs: [test-python, test-nodejs, lint]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .
-        publish_branch: gh-pages
-        force_orphan: true 
+        make clean 
