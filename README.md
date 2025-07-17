@@ -8,7 +8,7 @@ VerBeat is a 3D versioning system that combines manual semantic milestones with 
 
 👉 **Explore the [VerBeat website and live demo](https://avnercohen.github.io/verbeat/)**
 
-![Version](https://img.shields.io/badge/version-1.2507.5-blue)
+![Version](https://img.shields.io/badge/version-1.2507.6-blue)
 
 ---
 
