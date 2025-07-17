@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { getVersion, bumpVersion, getVersionComponents } = require('../src/verbeat.js');
+import { getVersion, bumpVersion, getVersionComponents } from '../src/verbeat.js';
 
 function main() {
     const args = process.argv.slice(2);
@@ -52,6 +52,6 @@ function main() {
     }
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     main();
 } 

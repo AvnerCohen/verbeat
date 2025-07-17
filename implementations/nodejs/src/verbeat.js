@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
 function getVerBeatVersion() {
     try {
@@ -247,7 +247,7 @@ function getVersionComponents(projectRoot = null, date = null) {
     return verbeat.getVersionComponents(date);
 }
 
-module.exports = {
+export {
     VerBeat,
     VerBeatError,
     VerBeatVersionFileError,
