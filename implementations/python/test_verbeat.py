@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import os
 import tempfile
-import shutil
 from pathlib import Path
 from datetime import datetime
 
@@ -82,7 +80,8 @@ def test_date_specific_version():
             print(f"  ✓ Date-specific version test passed: {version}")
         else:
             print(
-                f"  ✗ Date-specific version test failed: expected {expected}, got {version}"
+                f"  ✗ Date-specific version test failed: "
+                f"expected {expected}, got {version}"
             )
 
 
@@ -94,11 +93,12 @@ def test_error_handling():
 
         try:
             verbeat = VerBeat(temp_path)
-            version = verbeat.get_current_version()
-            print(f"  ✗ Should have raised error for missing version file")
+            verbeat.get_current_version()
+            print("  ✗ Should have raised error for missing version file")
         except Exception as e:
             print(
-                f"  ✓ Correctly raised error for missing version file: {type(e).__name__}"
+                f"  ✓ Correctly raised error for missing version file: "
+                f"{type(e).__name__}"
             )
 
         version_file = temp_path / "verbeat.version"
@@ -107,8 +107,8 @@ def test_error_handling():
 
         try:
             verbeat = VerBeat(temp_path)
-            version = verbeat.get_current_version()
-            print(f"  ✗ Should have raised error for empty version file")
+            verbeat.get_current_version()
+            print("  ✗ Should have raised error for empty version file")
         except Exception as e:
             print(
                 f"  ✓ Correctly raised error for empty version file: {type(e).__name__}"

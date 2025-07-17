@@ -36,7 +36,7 @@ install:
 lint:
 	@echo "Linting code..."
 	@if command -v uv >/dev/null 2>&1; then \
-		uv run flake8 verbeat.py test_verbeat.py test_git_edge_cases.py; \
+		uv run flake8 --max-line-length=88 --ignore=E203,W503 verbeat.py test_verbeat.py test_git_edge_cases.py; \
 	else \
 		echo "uv not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh"; \
 	fi

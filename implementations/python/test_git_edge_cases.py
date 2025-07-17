@@ -2,12 +2,10 @@
 
 import os
 import tempfile
-import shutil
 import subprocess
 from pathlib import Path
-from datetime import datetime
 
-from verbeat import VerBeat, get_version, get_version_components
+from verbeat import get_version, get_version_components
 
 
 def test_outside_git_repo():

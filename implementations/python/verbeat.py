@@ -12,8 +12,6 @@ Where:
 - C: Commit count for the current month (activity tempo)
 """
 
-import os
-import re
 import sys
 import argparse
 from datetime import datetime

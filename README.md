@@ -1,26 +1,35 @@
 <img src="verbeat_logo.png" alt="VerBeat Logo" width="64" height="64" />
 
-# VerBeat - A 3D Versioning System for Real-World Dev Flow
+# VerBeat
 
-![Version](https://img.shields.io/badge/version-1.2507.4-blue)
+**Manual Intent. Calendar Context. Commit Tempo.**
 
-> **Note:** This repository uses VerBeat for its own versioning! The version badge above is updated automatically by the pre-commit hook. The `version.json` file in this repo is an example of how VerBeat can be integrated into projects.
+VerBeat is a 3D versioning system that combines manual semantic milestones with automated time-based and activity-driven versioning. It bridges the gap between traditional semantic versioning and calendar-based approaches, providing a practical solution for modern development workflows.
 
-VerBeat combines manual semantic milestones with automated time-based and activity-driven versioning in the format **M.YYMM.C**:
+👉 **Explore the [VerBeat website and live demo](https://avnercohen.github.io/verbeat/)**
 
-- **M** - Manual version bump (semantic milestone)
-- **YYMM** - Year and month (calendar context)
-- **C** - Commit count for the current month (activity tempo)
+![Version](https://img.shields.io/badge/version-1.2507.5-blue)
+
+---
+
+VerBeat uses a unique version format: **M.YYMM.C**
+- **M**: Manual milestone (semantic bump)
+- **YYMM**: Year and month (calendar context)
+- **C**: Commit count for the current month (activity)
+
+> Example: `2.2507.14` = Manual version 2, July 2025, 14 commits this month
+
+---
 
 ## Why VerBeat?
 
 Existing versioning systems have fundamental limitations that waste time and provide inadequate information:
 
-**📅 [Calendar Versioning (CalVer)](https://calver.org/){:target="_blank"}**
+**📅 [Calendar Versioning (CalVer)](https://calver.org/)**
 - **Pros:** Automatic, no version decisions needed, clear time context
 - **Problem:** All versions are equal - a version only tells you "when" it was released, not "what" changed or "how significant" it is. You lose semantic meaning entirely.
 
-**🎯 [Semantic Versioning (SemVer)](https://semver.org/){:target="_blank"}**
+**🎯 [Semantic Versioning (SemVer)](https://semver.org/)**
 - **Pros:** Clear indication of change significance and compatibility
 - **Problem:** Requires constant decision-making about what constitutes "breaking" vs "minor" changes. Teams waste time debating version bumps for 90% of releases where the distinction is meaningless. The complexity often leads to version inflation or inconsistent practices.
 

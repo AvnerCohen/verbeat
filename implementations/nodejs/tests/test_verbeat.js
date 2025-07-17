@@ -1,9 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const os = require('os');
-
-const { VerBeat, getVersion, bumpVersion, getVersionComponents } = require('../src/verbeat.js');
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { execSync } from 'child_process';
+import { VerBeat, getVersion, bumpVersion, getVersionComponents } from '../src/verbeat.js';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function createTempDir() {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'verbeat-test-'));
@@ -227,6 +229,6 @@ function main() {
     }
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
     main();
 } 
