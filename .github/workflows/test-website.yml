@@ -1,0 +1,108 @@
+name: Test Website Demo
+
+on:
+  push:
+    paths: ['index.html', 'verbeat.html']
+  pull_request:
+    paths: ['index.html', 'verbeat.html']
+
+jobs:
+  test-demo:
+    name: Test Website Demo
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        # Install a simple HTTP server for testing
+        npm install -g http-server
+    
+    - name: Start server
+      run: |
+        # Start server in background
+        http-server -p 8000 . &
+        sleep 3  # Wait for server to start
+    
+    - name: Test demo functionality
+      run: |
+        # Test that the demo page loads and has expected elements
+        curl -s http://localhost:8000/index.html | grep -q "VerBeat"
+        curl -s http://localhost:8000/index.html | grep -q "Interactive VerBeat Demo"
+        curl -s http://localhost:8000/index.html | grep -q "versionDisplay"
+        curl -s http://localhost:8000/index.html | grep -q "manualVersion"
+        curl -s http://localhost:8000/index.html | grep -q "datePicker"
+        curl -s http://localhost:8000/index.html | grep -q "commitCounter"
+        echo "✓ All demo elements found"
+    
+    - name: Test JavaScript functionality
+      run: |
+        # Test JavaScript syntax and basic functionality
+        node -e "
+        const fs = require('fs');
+        const html = fs.readFileSync('index.html', 'utf8');
+        
+        // Extract JavaScript
+        const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
+        if (scriptMatch) {
+          const js = scriptMatch[1];
+          
+          // Basic syntax check
+          try {
+            new Function(js);
+            console.log('✓ JavaScript syntax is valid');
+          } catch (e) {
+            console.error('✗ JavaScript syntax error:', e.message);
+            process.exit(1);
+          }
+          
+          // Check for required functions
+          const requiredFunctions = ['showTab', 'updateVersion', 'addCommit'];
+          for (const func of requiredFunctions) {
+            if (js.includes(func)) {
+              console.log(`✓ Function ${func} found`);
+            } else {
+              console.error(`✗ Function ${func} not found`);
+              process.exit(1);
+            }
+          }
+        } else {
+          console.error('✗ No script tag found');
+          process.exit(1);
+        }
+        "
+    
+    - name: Test responsive design
+      run: |
+        # Check for responsive design elements
+        grep -q "@media" index.html && echo "✓ Responsive design found" || echo "⚠ No responsive design found"
+        grep -q "max-width" index.html && echo "✓ Max-width constraints found" || echo "⚠ No max-width constraints found"
+    
+    - name: Test accessibility
+      run: |
+        # Basic accessibility checks
+        grep -q 'lang="en"' index.html && echo "✓ Language attribute found" || echo "⚠ No language attribute found"
+        grep -q 'alt=' index.html && echo "✓ Alt attributes found" || echo "⚠ No alt attributes found (may be OK if no images)"
+        grep -q 'aria-' index.html && echo "✓ ARIA attributes found" || echo "⚠ No ARIA attributes found"
+    
+    - name: Test cross-browser compatibility
+      run: |
+        # Check for modern CSS features that might need fallbacks
+        grep -q "backdrop-filter" index.html && echo "⚠ backdrop-filter used (may need fallback)" || echo "✓ No backdrop-filter"
+        grep -q "grid-template-columns" index.html && echo "✓ CSS Grid used" || echo "⚠ No CSS Grid found"
+    
+    - name: Validate HTML structure
+      run: |
+        # Basic HTML structure validation
+        grep -q "<!DOCTYPE html>" index.html && echo "✓ DOCTYPE found" || echo "✗ No DOCTYPE found"
+        grep -q "<html" index.html && echo "✓ HTML tag found" || echo "✗ No HTML tag found"
+        grep -q "<head>" index.html && echo "✓ Head tag found" || echo "✗ No head tag found"
+        grep -q "<body>" index.html && echo "✓ Body tag found" || echo "✗ No body tag found"
+        grep -q "</html>" index.html && echo "✓ HTML properly closed" || echo "✗ HTML not properly closed" 

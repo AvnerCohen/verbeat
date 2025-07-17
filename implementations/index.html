@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerBeat Implementations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        .implementations {
+            margin: 2rem 0;
+        }
+
+        .implementation {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .implementation:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .implementation h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .implementation p {
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+
+        .implementation a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .implementation a:hover {
+            background: #5a67d8;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: white;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .status.ready {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status.coming-soon {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 2rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">VerBeat</div>
+            <div class="subtitle">Implementations</div>
+        </div>
+
+        <div class="content">
+            <h1>Available Implementations</h1>
+            <p>VerBeat implementations are available for various platforms and languages. Each implementation provides the same core API for consistent version management across your projects.</p>
+
+            <div class="implementations">
+                <div class="implementation">
+                    <h3>
+                        Python
+                        <span class="status ready">Ready</span>
+                    </h3>
+                    <p>A complete Python library with CLI tools, comprehensive error handling, and Git integration. Perfect for Python projects, CI/CD pipelines, and automation scripts.</p>
+                    <a href="python/">View Implementation</a>
+                </div>
+
+                <div class="implementation">
+                    <h3>
+                        JavaScript/Node.js
+                        <span class="status coming-soon">Coming Soon</span>
+                    </h3>
+                    <p>Node.js implementation with npm package support, CLI tools, and integration with popular build systems.</p>
+                    <a href="#" onclick="alert('Coming soon!')">Coming Soon</a>
+                </div>
+
+                <div class="implementation">
+                    <h3>
+                        Go
+                        <span class="status coming-soon">Coming Soon</span>
+                    </h3>
+                    <p>Go implementation with module support, CLI tools, and integration with Go toolchain.</p>
+                    <a href="#" onclick="alert('Coming soon!')">Coming Soon</a>
+                </div>
+
+                <div class="implementation">
+                    <h3>
+                        Rust
+                        <span class="status coming-soon">Coming Soon</span>
+                    </h3>
+                    <p>Rust implementation with Cargo integration, CLI tools, and zero-cost abstractions.</p>
+                    <a href="#" onclick="alert('Coming soon!')">Coming Soon</a>
+                </div>
+            </div>
+
+            <h2>Contributing</h2>
+            <p>Want to contribute an implementation for your favorite language? Check out our <a href="https://github.com/verbeat/verbeat">GitHub repository</a> for guidelines and examples.</p>
+
+            <div class="back-link">
+                <a href="../">← Back to VerBeat</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
