@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verbeat"
+dynamic = ["version"]
+description = "A 3D Versioning System for Real-World Dev Flow"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "VerBeat Team", email = "team@verbeat.dev"}
+]
+maintainers = [
+    {name = "VerBeat Team", email = "team@verbeat.dev"}
+]
+keywords = ["versioning", "git", "semantic", "calendar", "version management"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Version Control",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/verbeat/verbeat"
+Documentation = "https://github.com/verbeat/verbeat#readme"
+Repository = "https://github.com/verbeat/verbeat"
+"Bug Tracker" = "https://github.com/verbeat/verbeat/issues"
+
+[project.scripts]
+verbeat = "verbeat:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "verbeat.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["verbeat*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+verbeat = ["*.version"]
+
+[project.optional-dependencies]
+dev = [
+    "flake8>=6.0.0",
+    "black>=23.0.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+] 

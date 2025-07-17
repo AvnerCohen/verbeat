@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Script to get the current VerBeat version for the website.
-"""
 
 import sys
 import os
@@ -14,4 +11,4 @@ if __name__ == "__main__":
         version = get_version()
         print(version)
     except Exception as e:
-        print("1.0000.0")  # Fallback version 
+        print("1.0000.0") 

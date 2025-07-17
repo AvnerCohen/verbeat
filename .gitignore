@@ -70,6 +70,7 @@ yarn-error.log*
 dist/
 build/
 *.tar.gz
+*.tgz
 *.zip
 
 # Local development

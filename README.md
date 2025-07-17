@@ -1,4 +1,10 @@
+![VerBeat Logo](verbeat_logo.png)
+
 # VerBeat - A 3D Versioning System for Real-World Dev Flow
+
+![Version](https://img.shields.io/badge/version-1.2507.3-blue)
+
+> **Note:** This repository uses VerBeat for its own versioning! The version badge above is updated automatically by the pre-commit hook. The `version.json` file in this repo is an example of how VerBeat can be integrated into projects.
 
 VerBeat combines manual semantic milestones with automated time-based and activity-driven versioning in the format **M.YYMM.C**:
 
@@ -50,11 +56,8 @@ python verbeat.py components
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (basic + Git edge cases)
 make test
-
-# Run Git edge case tests only
-make test-git
 
 # Run linting (requires flake8)
 make lint
@@ -110,6 +113,13 @@ VerBeat is ideal for:
 - **Testing:** `make test` runs full test suite including Git edge cases
 - **CLI:** `python verbeat.py version|bump|components`
 
+### Node.js
+- **Location:** `implementations/nodejs/`
+- **Features:** Complete library with CLI tools, comprehensive testing, Git integration
+- **Testing:** `make test` runs full test suite
+- **CLI:** `node bin/verbeat.js version|bump|components`
+- **Install:** `npm install`
+
 ### Creating New Implementations
 
 See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for detailed specifications on creating VerBeat implementations in any programming language.
@@ -121,8 +131,6 @@ This project includes comprehensive GitHub Actions workflows that:
 - **Test Python implementation** across multiple platforms (Ubuntu, Windows, macOS) and Python versions (3.8-3.12)
 - **Validate website functionality** including HTML validation and link checking
 - **Run code quality checks** including linting and formatting
-- **Perform security scans** using CodeQL analysis
-- **Build and package** the project for distribution
 - **Deploy website** to GitHub Pages on main branch
 
 ### Local Development
@@ -137,8 +145,8 @@ python verbeat.py version
 python verbeat.py bump "Test"
 python verbeat.py components
 
-# Test Git integration
-make test-git
+# Get current project version
+python scripts/get_version.py
 ```
 
 ## Error Handling

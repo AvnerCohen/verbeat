@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# VerBeat pre-commit hook
+# Automatically updates version.json with current VerBeat version
+
+# Check if we're in a VerBeat project (has verbeat.version file)
+if [ ! -f "verbeat.version" ]; then
+    echo "No verbeat.version file found, skipping version update"
+    exit 0
+fi
+
+# Check if implementations/python/verbeat.py exists
+if [ ! -f "implementations/python/verbeat.py" ]; then
+    echo "No VerBeat implementation found, skipping version update"
+    exit 0
+fi
+
+# Update version.json with current VerBeat version
+cd implementations/python
+version=$(python -c "import sys; sys.path.insert(0, '../..'); from verbeat import get_version; print(get_version('../..'))")
+echo "{\"version\": \"$version\"}" > ../../version.json
+echo "Updated version.json with: $version"
+
+# Update shields.io badge in README
+cd ../..
+sed -i.bak "s|https://img.shields.io/badge/version-[^)]*|https://img.shields.io/badge/version-$version-blue|" README.md
+rm README.md.bak
+echo "Updated README badge with: $version"
+
+# Add the updated files to the commit
+git add version.json
+git add README.md 

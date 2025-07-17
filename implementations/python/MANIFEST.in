@@ -1,0 +1,7 @@
+include README.md
+include verbeat.version
+include LICENSE
+include pyproject.toml
+include setup.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co] 

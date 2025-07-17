@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="verbeat_logo.png">
     <style>
         * {
             margin: 0;
@@ -29,8 +30,25 @@
         }
 
         .header {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 3rem;
+        }
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+        .logo-img {
+            height: 64px;
+            width: 64px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            background: white;
+            object-fit: contain;
         }
 
         .logo {
@@ -310,7 +328,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">VerBeat</div>
+            <div class="header-row">
+                <img src="verbeat_logo.png" alt="VerBeat Logo" class="logo-img" />
+                <div class="logo">VerBeat</div>
+            </div>
             <div class="tagline">Manual Intent. Calendar Context. Commit Tempo.</div>
             <div class="version-badge">v0.1.0</div>
         </div>
@@ -517,13 +538,13 @@
         });
 
         function loadCurrentVersion() {
-            // Try to load version from the script
-            fetch('scripts/get_version.py')
-                .then(response => response.text())
-                .then(version => {
+            // Load version from JSON file
+            fetch('version.json')
+                .then(response => response.json())
+                .then(data => {
                     const versionBadge = document.querySelector('.version-badge');
                     if (versionBadge) {
-                        versionBadge.textContent = `v${version.trim()}`;
+                        versionBadge.textContent = `v${data.version}`;
                     }
                 })
                 .catch(error => {

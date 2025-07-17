@@ -1,0 +1,45 @@
+{
+  "name": "verbeat",
+  "version": "1.2507.0",
+  "description": "VerBeat - A 3D Versioning System for Real-World Dev Flow",
+  "main": "src/verbeat.js",
+  "bin": {
+    "verbeat": "./bin/verbeat.js"
+  },
+  "scripts": {
+    "test": "node tests/test_verbeat.js",
+    "lint": "eslint src/ tests/ bin/",
+    "format": "prettier --write src/ tests/ bin/",
+    "prepublishOnly": "npm test && npm run update-version",
+    "update-version": "node -e \"const v=require('./src/verbeat.js'); console.log('Updating version to:', v.VERSION); require('fs').writeFileSync('package.json', JSON.stringify({...require('./package.json'), version: v.VERSION}, null, 2) + '\\n');\""
+  },
+  "keywords": [
+    "versioning",
+    "git",
+    "semantic",
+    "calendar",
+    "version-management"
+  ],
+  "author": "VerBeat Team <team@verbeat.dev>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/verbeat/verbeat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/verbeat/verbeat/issues"
+  },
+  "homepage": "https://github.com/verbeat/verbeat#readme",
+  "files": [
+    "src/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

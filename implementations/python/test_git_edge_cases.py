@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Test Git edge cases for VerBeat Python implementation.
-"""
 
 import os
 import tempfile
@@ -10,23 +7,19 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
-# Import VerBeat
 from verbeat import VerBeat, get_version, get_version_components
 
 
 def test_outside_git_repo():
-    """Test behavior when not in a Git repository."""
     print("Testing outside Git repository...")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         
-        # Create a test version file
         version_file = temp_path / "verbeat.version"
         with open(version_file, 'w') as f:
             f.write("1 # Initial release\n")
         
-        # Test that it works without Git
         try:
             version = get_version(temp_path)
             manual, yymm, commits = get_version_components(temp_path)
@@ -34,7 +27,6 @@ def test_outside_git_repo():
             print(f"  Version: {version}")
             print(f"  Manual: {manual}, Date: {yymm}, Commits: {commits}")
             
-            # Should have 0 commits when not in Git repo
             assert commits == 0, f"Expected 0 commits, got {commits}"
             assert version.endswith(".0"), f"Expected version to end with .0, got {version}"
             
@@ -46,21 +38,17 @@ def test_outside_git_repo():
 
 
 def test_empty_git_repo():
-    """Test behavior in an empty Git repository."""
     print("Testing empty Git repository...")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         
-        # Initialize Git repo
         subprocess.run(["git", "init"], cwd=temp_path, check=True)
         
-        # Create a test version file
         version_file = temp_path / "verbeat.version"
         with open(version_file, 'w') as f:
             f.write("1 # Initial release\n")
         
-        # Test that it works with empty Git repo
         try:
             version = get_version(temp_path)
             manual, yymm, commits = get_version_components(temp_path)
@@ -68,7 +56,6 @@ def test_empty_git_repo():
             print(f"  Version: {version}")
             print(f"  Manual: {manual}, Date: {yymm}, Commits: {commits}")
             
-            # Should have 0 commits in empty repo
             assert commits == 0, f"Expected 0 commits, got {commits}"
             assert version.endswith(".0"), f"Expected version to end with .0, got {version}"
             
@@ -80,27 +67,22 @@ def test_empty_git_repo():
 
 
 def test_git_repo_with_commits():
-    """Test behavior in a Git repository with commits."""
     print("Testing Git repository with commits...")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         
-        # Initialize Git repo
         subprocess.run(["git", "init"], cwd=temp_path, check=True)
         subprocess.run(["git", "config", "user.name", "Test User"], cwd=temp_path, check=True)
         subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=temp_path, check=True)
         
-        # Create a test version file
         version_file = temp_path / "verbeat.version"
         with open(version_file, 'w') as f:
             f.write("1 # Initial release\n")
         
-        # Add and commit the version file
         subprocess.run(["git", "add", "verbeat.version"], cwd=temp_path, check=True)
         subprocess.run(["git", "commit", "-m", "Initial commit"], cwd=temp_path, check=True)
         
-        # Test that it works with commits
         try:
             version = get_version(temp_path)
             manual, yymm, commits = get_version_components(temp_path)
@@ -108,7 +90,6 @@ def test_git_repo_with_commits():
             print(f"  Version: {version}")
             print(f"  Manual: {manual}, Date: {yymm}, Commits: {commits}")
             
-            # Should have at least 1 commit
             assert commits >= 1, f"Expected at least 1 commit, got {commits}"
             assert not version.endswith(".0"), f"Expected version to not end with .0, got {version}"
             
@@ -120,18 +101,15 @@ def test_git_repo_with_commits():
 
 
 def test_git_not_installed():
-    """Test behavior when Git is not available."""
     print("Testing without Git installed...")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         
-        # Create a test version file
         version_file = temp_path / "verbeat.version"
         with open(version_file, 'w') as f:
             f.write("1 # Initial release\n")
         
-        # Temporarily modify PATH to hide git
         original_path = os.environ.get('PATH', '')
         os.environ['PATH'] = '/nonexistent'
         
@@ -142,7 +120,6 @@ def test_git_not_installed():
             print(f"  Version: {version}")
             print(f"  Manual: {manual}, Date: {yymm}, Commits: {commits}")
             
-            # Should have 0 commits when Git not available
             assert commits == 0, f"Expected 0 commits, got {commits}"
             assert version.endswith(".0"), f"Expected version to end with .0, got {version}"
             
@@ -152,23 +129,19 @@ def test_git_not_installed():
             print(f"  ✗ Git not installed test failed: {e}")
             raise
         finally:
-            # Restore PATH
             os.environ['PATH'] = original_path
 
 
 def test_git_command_failure():
-    """Test behavior when Git commands fail."""
     print("Testing Git command failure...")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         
-        # Create a test version file
         version_file = temp_path / "verbeat.version"
         with open(version_file, 'w') as f:
             f.write("1 # Initial release\n")
         
-        # Create a broken Git repo (no HEAD)
         git_dir = temp_path / ".git"
         git_dir.mkdir()
         
@@ -179,7 +152,6 @@ def test_git_command_failure():
             print(f"  Version: {version}")
             print(f"  Manual: {manual}, Date: {yymm}, Commits: {commits}")
             
-            # Should have 0 commits when Git commands fail
             assert commits == 0, f"Expected 0 commits, got {commits}"
             assert version.endswith(".0"), f"Expected version to end with .0, got {version}"
             
@@ -191,7 +163,6 @@ def test_git_command_failure():
 
 
 def main():
-    """Run all Git edge case tests."""
     print("Running VerBeat Git edge case tests...\n")
     
     try:
