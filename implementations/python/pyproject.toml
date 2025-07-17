@@ -9,10 +9,10 @@ description = "A 3D Versioning System for Real-World Dev Flow"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "VerBeat Team", email = "team@verbeat.dev"}
+    {name = "Avner Cohen", email = "israbirding@gmail.com"}
 ]
 maintainers = [
-    {name = "VerBeat Team", email = "team@verbeat.dev"}
+    {name = "Avner Cohen", email = "israbirding@gmail.com"}
 ]
 keywords = ["versioning", "git", "semantic", "calendar", "version management"]
 classifiers = [

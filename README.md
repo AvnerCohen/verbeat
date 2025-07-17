@@ -2,7 +2,7 @@
 
 # VerBeat - A 3D Versioning System for Real-World Dev Flow
 
-![Version](https://img.shields.io/badge/version-1.2507.3-blue)
+![Version](https://img.shields.io/badge/version-1.2507.2-blue)
 
 > **Note:** This repository uses VerBeat for its own versioning! The version badge above is updated automatically by the pre-commit hook. The `version.json` file in this repo is an example of how VerBeat can be integrated into projects.
 
@@ -16,11 +16,11 @@ VerBeat combines manual semantic milestones with automated time-based and activi
 
 Existing versioning systems have fundamental limitations that waste time and provide inadequate information:
 
-**📅 Calendar Versioning (CalVer)**
+**📅 [Calendar Versioning (CalVer)](https://calver.org/){:target="_blank"}**
 - **Pros:** Automatic, no version decisions needed, clear time context
 - **Problem:** All versions are equal - a version only tells you "when" it was released, not "what" changed or "how significant" it is. You lose semantic meaning entirely.
 
-**🎯 Semantic Versioning (SemVer)**
+**🎯 [Semantic Versioning (SemVer)](https://semver.org/){:target="_blank"}**
 - **Pros:** Clear indication of change significance and compatibility
 - **Problem:** Requires constant decision-making about what constitutes "breaking" vs "minor" changes. Teams waste time debating version bumps for 90% of releases where the distinction is meaningless. The complexity often leads to version inflation or inconsistent practices.
 

@@ -20,7 +20,7 @@
     "calendar",
     "version-management"
   ],
-  "author": "VerBeat Team <team@verbeat.dev>",
+  "author": "Avner Cohen <israbirding@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"
