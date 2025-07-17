@@ -44,8 +44,8 @@
             margin-bottom: 0.85rem;
         }
         .logo-img {
-            height: 80px;
-            width: 80px;
+            height: 72px;
+            width: 72px;
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.15);
             background: white;
@@ -68,14 +68,14 @@
                 0 4px 8px rgba(0,0,0,0.3);
             position: relative;
             letter-spacing: 2px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
             padding: 1rem 2rem;
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             box-shadow: 
-                0 8px 32px rgba(0,0,0,0.2),
-                inset 0 1px 0 rgba(255,255,255,0.2);
+                0 8px 32px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
         }
         
         .logo::after {
@@ -328,6 +328,13 @@
             text-decoration: underline;
         }
 
+        .footer-title {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -472,6 +479,7 @@
                     <p>VerBeat implementations are available for:</p>
                     <ul>
                         <li><a href="implementations/python/">Python</a> - Complete library with CLI tools</li>
+                        <li><a href="implementations/nodejs/">Node.js</a> - Complete library with CLI tools</li>
                         <li>More coming soon...</li>
                     </ul>
                 </div>
@@ -511,8 +519,8 @@
         </div>
 
         <div class="footer">
-            <p>VerBeat - A 3D Versioning System for Real-World Dev Flow</p>
-            <p><a href="https://github.com/verbeat/verbeat">GitHub</a> • <a href="implementations/python/">Python Implementation</a></p>
+            <p class="footer-title">VerBeat - A 3D Versioning System for Real-World Dev Flow</p>
+            <p><a href="https://github.com/verbeat/verbeat">GitHub</a> • <a href="implementations/python/">Python</a> • <a href="implementations/nodejs/">Node.js</a></p>
         </div>
     </div>
 
