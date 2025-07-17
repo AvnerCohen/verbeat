@@ -1,8 +1,8 @@
-![VerBeat Logo](verbeat_logo.png)
+<img src="verbeat_logo.png" alt="VerBeat Logo" width="64" height="64" />
 
 # VerBeat - A 3D Versioning System for Real-World Dev Flow
 
-![Version](https://img.shields.io/badge/version-1.2507.2-blue)
+![Version](https://img.shields.io/badge/version-1.2507.3-blue)
 
 > **Note:** This repository uses VerBeat for its own versioning! The version badge above is updated automatically by the pre-commit hook. The `version.json` file in this repo is an example of how VerBeat can be integrated into projects.
 

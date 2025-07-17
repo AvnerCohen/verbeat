@@ -692,8 +692,12 @@ wheels = [
 
 [[package]]
 name = "verbeat"
-version = "1.0.0"
+version = "1.2507.0"
 source = { editable = "." }
+dependencies = [
+    { name = "black" },
+    { name = "flake8" },
+]
 
 [package.optional-dependencies]
 dev = [
@@ -705,8 +709,10 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "black", specifier = ">=25.1.0" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.0.0" },
+    { name = "flake8", specifier = ">=7.3.0" },
     { name = "flake8", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "twine", marker = "extra == 'dev'", specifier = ">=4.0.0" },
 ]
