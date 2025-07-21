@@ -23,6 +23,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -36,12 +38,18 @@ jobs:
         
     - name: Generate and inject version
       run: |
+        echo "=== Git Debug Info ==="
+        git log --oneline -3
+        echo "Available tags:"
+        git tag --list --sort=-version:refname | head -5
+        echo "=== Version Calculation ==="
         cd implementations/python
         uv sync
         VERSION=$(uv run python verbeat.py version)
         cd ../..
         echo "Current version: '$VERSION'"
         echo "Version length: ${#VERSION}"
+        echo "=== File Processing ==="
         echo "Checking if placeholder exists:"
         grep "CURRENT_VERSION_PLACEHOLDER" index.html || echo "Placeholder not found!"
         echo "Replacing placeholder in index.html..."
