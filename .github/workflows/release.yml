@@ -1,0 +1,98 @@
+name: Release VerBeat
+
+on:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    
+    - name: Get current version
+      id: get-version
+      run: |
+        cd implementations/python
+        uv run python -c "
+        import sys
+        import os
+        sys.path.insert(0, '.')
+        from verbeat import get_version
+        version = get_version('../..')
+        print(f'version={version}')
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            f.write(f'version={version}\n')
+        "
+    
+    - name: Check if version changed
+      id: check-version
+      run: |
+        CURRENT_VERSION="${{ steps.get-version.outputs.version }}"
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Get the latest tag
+        LATEST_TAG=$(git tag --list --sort=-version:refname | head -n1)
+        echo "Latest tag: $LATEST_TAG"
+        
+        if [ -z "$LATEST_TAG" ]; then
+          echo "No tags found, creating first tag"
+          echo "should_tag=true" >> $GITHUB_OUTPUT
+        elif [ "$LATEST_TAG" != "v$CURRENT_VERSION" ]; then
+          echo "Version changed from $LATEST_TAG to v$CURRENT_VERSION"
+          echo "should_tag=true" >> $GITHUB_OUTPUT
+        else
+          echo "Version unchanged, no tag needed"
+          echo "should_tag=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create and push tag
+      if: steps.check-version.outputs.should_tag == 'true'
+      run: |
+        CURRENT_VERSION="${{ steps.get-version.outputs.version }}"
+        TAG_NAME="v$CURRENT_VERSION"
+        
+        # Create annotated tag
+        git tag -a "$TAG_NAME" -m "VerBeat $CURRENT_VERSION: Automated release"
+        
+        # Push the tag
+        git push origin "$TAG_NAME"
+        
+        echo "Created and pushed tag: $TAG_NAME"
+    
+    - name: Update website version
+      if: steps.check-version.outputs.should_tag == 'true'
+      run: |
+        cd implementations/python
+        uv run python scripts/update_website_version.py
+        
+        # Commit and push the updated version file
+        git add ../../current_version.json
+        git commit -m "Update website version to ${{ steps.get-version.outputs.version }}"
+        git push origin main 
