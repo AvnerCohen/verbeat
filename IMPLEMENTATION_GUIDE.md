@@ -100,6 +100,7 @@ new_version = bump_manual_version("Breaking API changes")  # 3
 **Version Resolution Priority**:
 1. **Primary**: Read version from latest Git tag (if available)
 2. **Fallback**: Calculate from `verbeat.version` file + current state
+3. **Default**: Return `1.2507.0` if no version sources available
 
 **Required Methods**:
 
@@ -425,3 +426,40 @@ For questions about implementing VerBeat in a new language:
 - Review the test suite for expected behavior
 - Open an issue for clarification
 - Submit a pull request for review 
+
+## Version Calculation
+
+### Core Methods
+
+Implement these two key methods for version calculation:
+
+1. **`getCurrentVersion()`** - Returns the "official" current version
+   - Prioritizes Git tags if they exist
+   - Falls back to calculated version if no tags
+   - Use for: CLI output, package metadata, user-facing displays
+
+2. **`getCalculatedVersion()`** - Returns the calculated version ignoring tags
+   - Always calculates based on manual version + date + commit count
+   - Ignores existing Git tags
+   - Use for: CI/CD release decisions, development planning
+
+### Example Implementation
+
+```python
+def get_current_version(self, date=None):
+    latest_tag = self._get_latest_tag_version()
+    if latest_tag:
+        return latest_tag[1:]  # Remove 'v' prefix
+    
+    return self.get_calculated_version(date)
+
+def get_calculated_version(self, date=None):
+    manual_version = self._get_manual_version()
+    date_obj = date or datetime.now()
+    commit_count = self._get_commit_count_for_month(date_obj)
+    
+    year = str(date_obj.year)[-2:]
+    month = f"{date_obj.month:02d}"
+    
+    return f"{manual_version}.{year}{month}.{commit_count}"
+``` 

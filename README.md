@@ -149,6 +149,33 @@ VerBeat is ideal for:
 
 ## Usage
 
+### Basic Version Retrieval
+
+```python
+from verbeat import get_version, get_calculated_version
+
+# Get current version (prioritizes Git tags)
+current = get_version()  # e.g., "2.2507.2"
+
+# Get calculated version (ignores tags, always calculates)
+calculated = get_calculated_version()  # e.g., "2.2507.8"
+```
+
+```javascript
+import { getCurrentVersion, getCalculatedVersion } from 'verbeat';
+
+// Get current version (prioritizes Git tags)
+const current = getCurrentVersion();  // e.g., "2.2507.2"
+
+// Get calculated version (ignores tags, always calculates)
+const calculated = getCalculatedVersion();  // e.g., "2.2507.8"
+```
+
+### When to Use Each Method
+
+- **`get_version()` / `getCurrentVersion()`**: Use for displaying the "official" current version (CLI, website, package metadata)
+- **`get_calculated_version()` / `getCalculatedVersion()`**: Use for CI/CD release decisions and development planning
+
 ### Package Manager (Recommended)
 ```bash
 # Python

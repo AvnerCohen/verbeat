@@ -10,7 +10,9 @@ import {
     getVersion,
     bumpVersion,
     getVersionComponents,
-    VerBeatBranchError
+    VerBeatBranchError,
+    getCalculatedVersion,
+    getCurrentVersion
 } from '../src/verbeat.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -183,6 +185,7 @@ describe('VerBeat', () => {
             execSync('git init', { cwd: tempDir });
             execSync('git config user.name "Test User"', { cwd: tempDir });
             execSync('git config user.email "test@example.com"', { cwd: tempDir });
+            execSync('git branch -m main', { cwd: tempDir });
             execSync('git add verbeat.version', { cwd: tempDir });
             execSync('git commit -m "Initial commit"', { cwd: tempDir });
             execSync('git checkout -b feature-branch', { cwd: tempDir });
@@ -272,6 +275,116 @@ describe('VerBeat', () => {
             assert.deepStrictEqual([manual, yymm, commits], [1, '2507', 5]);
         } finally {
             fs.rmSync(tempDir, { recursive: true, force: true });
+        }
+    });
+
+    test('getCalculatedVersion ignores existing tags', () => {
+        const tempDir = createTempDir();
+        
+        try {
+            const projectRoot = path.join(tempDir, 'project');
+            fs.mkdirSync(projectRoot);
+            
+            const verbeatFile = path.join(projectRoot, 'verbeat.version');
+            fs.writeFileSync(verbeatFile, '2 # Test project\n');
+            
+            const gitDir = path.join(projectRoot, '.git');
+            fs.mkdirSync(gitDir);
+            
+            execSync('git init', { cwd: projectRoot });
+            execSync('git config user.name "Test"', { cwd: projectRoot });
+            execSync('git config user.email "test@example.com"', { cwd: projectRoot });
+            
+            for (let i = 0; i < 5; i++) {
+                const testFile = path.join(projectRoot, `file${i}.txt`);
+                fs.writeFileSync(testFile, `content ${i}`);
+                execSync(`git add ${testFile}`, { cwd: projectRoot });
+                execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
+            }
+            
+            execSync('git tag -a v2.2507.2 -m "Old tag"', { cwd: projectRoot });
+            
+            const verbeat = new VerBeat(projectRoot);
+            
+            const currentVersion = verbeat.getCurrentVersion();
+            const calculatedVersion = verbeat.getCalculatedVersion();
+            
+            assert.strictEqual(currentVersion, '2.2507.2');
+            assert.strictEqual(calculatedVersion, '2.2507.5');
+        } finally {
+            cleanupTempDir(tempDir);
+        }
+    });
+
+    test('getCalculatedVersion function works correctly', () => {
+        const tempDir = createTempDir();
+        
+        try {
+            const projectRoot = path.join(tempDir, 'project');
+            fs.mkdirSync(projectRoot);
+            
+            const verbeatFile = path.join(projectRoot, 'verbeat.version');
+            fs.writeFileSync(verbeatFile, '1 # Test project\n');
+            
+            const gitDir = path.join(projectRoot, '.git');
+            fs.mkdirSync(gitDir);
+            
+            execSync('git init', { cwd: projectRoot });
+            execSync('git config user.name "Test"', { cwd: projectRoot });
+            execSync('git config user.email "test@example.com"', { cwd: projectRoot });
+            
+            for (let i = 0; i < 3; i++) {
+                const testFile = path.join(projectRoot, `file${i}.txt`);
+                fs.writeFileSync(testFile, `content ${i}`);
+                execSync(`git add ${testFile}`, { cwd: projectRoot });
+                execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
+            }
+            
+            execSync('git tag -a v1.2507.1 -m "Old tag"', { cwd: projectRoot });
+            
+            const calculatedVersion = getCalculatedVersion(projectRoot);
+            const currentVersion = getCurrentVersion(projectRoot);
+            
+            assert.strictEqual(calculatedVersion, '1.2507.3');
+            assert.strictEqual(currentVersion, '1.2507.1');
+        } finally {
+            cleanupTempDir(tempDir);
+        }
+    });
+
+    test('getCurrentVersion with useCalculated parameter', () => {
+        const tempDir = createTempDir();
+        
+        try {
+            const projectRoot = path.join(tempDir, 'project');
+            fs.mkdirSync(projectRoot);
+            
+            const verbeatFile = path.join(projectRoot, 'verbeat.version');
+            fs.writeFileSync(verbeatFile, '3 # Test project\n');
+            
+            const gitDir = path.join(projectRoot, '.git');
+            fs.mkdirSync(gitDir);
+            
+            execSync('git init', { cwd: projectRoot });
+            execSync('git config user.name "Test"', { cwd: projectRoot });
+            execSync('git config user.email "test@example.com"', { cwd: projectRoot });
+            
+            for (let i = 0; i < 4; i++) {
+                const testFile = path.join(projectRoot, `file${i}.txt`);
+                fs.writeFileSync(testFile, `content ${i}`);
+                execSync(`git add ${testFile}`, { cwd: projectRoot });
+                execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
+            }
+            
+            execSync('git tag -a v3.2507.2 -m "Old tag"', { cwd: projectRoot });
+            
+            const currentVersion = getCurrentVersion(projectRoot);
+            const calculatedVersion = getCurrentVersion(projectRoot, new Date(), true);
+            
+            assert.strictEqual(currentVersion, '3.2507.2');
+            assert.strictEqual(calculatedVersion, '3.2507.4');
+        } finally {
+            cleanupTempDir(tempDir);
         }
     });
 }); 

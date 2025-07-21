@@ -21,14 +21,23 @@ from typing import Optional, Tuple, List
 
 
 def _get_verbeat_version() -> str:
-    """Get the current VerBeat version from the version file."""
-    project_root = _find_project_root()
-    if project_root:
-        try:
-            verbeat = VerBeat(project_root)
-            return verbeat.get_current_version()
-        except Exception:
-            pass
+    """Get the current VerBeat version from Git tags or version file."""
+    # Try multiple possible project roots
+    possible_roots = [
+        _find_project_root(),  # Current directory and parents
+        Path(
+            __file__
+        ).parent.parent.parent,  # Go up from implementations/python/verbeat.py
+        Path.cwd().parent.parent,  # Go up from current directory
+    ]
+
+    for project_root in possible_roots:
+        if project_root and project_root.exists():
+            try:
+                verbeat = VerBeat(project_root)
+                return verbeat.get_current_version()
+            except Exception:
+                continue
 
     return "1.2507.0"
 
@@ -37,14 +46,16 @@ def _find_project_root() -> Optional[Path]:
     """Find the project root directory containing verbeat.version."""
     current = Path.cwd()
 
-    for path in [current, current.parent, current.parent.parent, current.parent.parent.parent]:
+    for path in [
+        current,
+        current.parent,
+        current.parent.parent,
+        current.parent.parent.parent,
+    ]:
         if (path / "verbeat.version").exists():
             return path
 
     return None
-
-
-__version__ = _get_verbeat_version()
 
 
 class VerBeatError(Exception):
@@ -90,8 +101,8 @@ class VerBeat:
                 check=True,
             )
 
-            tags = result.stdout.strip().split('\n')
-            if not tags or tags[0] == '':
+            tags = result.stdout.strip().split("\n")
+            if not tags or tags[0] == "":
                 return None
 
             return tags[0]
@@ -130,6 +141,17 @@ class VerBeat:
         except subprocess.CalledProcessError:
             return False
 
+    def get_calculated_version(self, date: Optional[datetime] = None) -> str:
+        """Get the calculated version ignoring existing tags."""
+        manual_version = self._get_manual_version()
+        date_obj = date or datetime.now()
+        commit_count = self._get_commit_count_for_month(date_obj)
+
+        year = str(date_obj.year)[-2:]
+        month = f"{date_obj.month:02d}"
+
+        return f"{manual_version}.{year}{month}.{commit_count}"
+
     def get_current_version(self, date: Optional[datetime] = None) -> str:
         latest_tag = self._get_latest_tag_version()
         if latest_tag:
@@ -150,7 +172,7 @@ class VerBeat:
         latest_tag = self._get_latest_tag_version()
         if latest_tag:
             version_str = latest_tag[1:]
-            parts = version_str.split('.')
+            parts = version_str.split(".")
             if len(parts) == 3:
                 try:
                     manual_version = int(parts[0])
@@ -374,10 +396,30 @@ class VerBeat:
             return 0
 
 
-def get_version(
+def get_calculated_version(
     project_root: Optional[str] = None, date: Optional[datetime] = None
 ) -> str:
+    """Get the calculated version ignoring existing tags."""
+    if project_root:
+        verbeat = VerBeat(project_root)
+    else:
+        project_root_path = _find_project_root()
+        if not project_root_path:
+            return "1.2507.0"
+        verbeat = VerBeat(project_root_path)
+
+    return verbeat.get_calculated_version(date)
+
+
+def get_version(
+    project_root: Optional[str] = None,
+    date: Optional[datetime] = None,
+    use_calculated: bool = False,
+) -> str:
     """Get the current VerBeat version."""
+    if use_calculated:
+        return get_calculated_version(project_root, date)
+
     if project_root:
         verbeat = VerBeat(project_root)
     else:

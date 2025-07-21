@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        
+    - name: Generate and inject version
+      run: |
+        cd implementations/python
+        uv sync
+        VERSION=$(uv run python verbeat.py version)
+        cd ../..
+        echo "Current version: $VERSION"
+        echo "Checking if placeholder exists:"
+        grep "CURRENT_VERSION_PLACEHOLDER" index.html || echo "Placeholder not found!"
+        echo "Replacing placeholder in index.html..."
+        sed -i "s/CURRENT_VERSION_PLACEHOLDER/$VERSION/g" index.html
+        echo "Verification - checking if replacement worked:"
+        grep "const currentVersion = '$VERSION';" index.html || echo "Replacement failed!"
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4 

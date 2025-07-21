@@ -26,10 +26,10 @@ clean:
 	@find . -name "*.pyc" -delete
 	@find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 
-# Install dependencies (none required for basic functionality)
+# Install dependencies
 install:
-	@echo "Installing VerBeat in development mode..."
-	@uv pip install -e .
+	@echo "Installing VerBeat dependencies..."
+	@uv sync
 
 # Lint code (requires flake8)
 lint:

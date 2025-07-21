@@ -24,9 +24,10 @@ function _findProjectRoot() {
 }
 
 function getVersion(projectRoot = null, date = null) {
+    const dateObj = date || new Date();
     if (projectRoot) {
         const verbeat = new VerBeat(projectRoot);
-        return verbeat.getCurrentVersion(date);
+        return verbeat.getCurrentVersion(dateObj);
     }
 
     const projectRootPath = _findProjectRoot();
@@ -35,13 +36,14 @@ function getVersion(projectRoot = null, date = null) {
     }
 
     const verbeat = new VerBeat(projectRootPath);
-    return verbeat.getCurrentVersion(date);
+    return verbeat.getCurrentVersion(dateObj);
 }
 
 function getVersionComponents(projectRoot = null, date = null) {
+    const dateObj = date || new Date();
     if (projectRoot) {
         const verbeat = new VerBeat(projectRoot);
-        return verbeat.getVersionComponents(date);
+        return verbeat.getVersionComponents(dateObj);
     }
 
     const projectRootPath = _findProjectRoot();
@@ -50,7 +52,7 @@ function getVersionComponents(projectRoot = null, date = null) {
     }
 
     const verbeat = new VerBeat(projectRootPath);
-    return verbeat.getVersionComponents(date);
+    return verbeat.getVersionComponents(dateObj);
 }
 
 function bumpVersion(comment = '', projectRoot = null) {
@@ -85,6 +87,16 @@ function initProject(comment = 'Initial release', projectRoot = null) {
     } catch (error) {
         throw new VerBeatError(`Failed to initialize project: ${error.message}`);
     }
+}
+
+function getCalculatedVersion(projectRoot = null, date = new Date()) {
+    const verbeat = new VerBeat(projectRoot);
+    return verbeat.getCalculatedVersion(date);
+}
+
+function getCurrentVersion(projectRoot = null, date = new Date(), useCalculated = false) {
+    const verbeat = new VerBeat(projectRoot);
+    return verbeat.getCurrentVersion(date, useCalculated);
 }
 
 class VerBeatError extends Error {
@@ -183,20 +195,27 @@ class VerBeat {
         }
     }
 
-    getCurrentVersion(date = null) {
+    getCalculatedVersion(date = new Date()) {
+        const manualVersion = this._getManualVersion();
+        const commitCount = this._getCommitCountForMonth(date);
+        const year = date.getFullYear().toString().slice(-2);
+        const month = date.getMonth() + 1;
+        const monthStr = month.toString().padStart(2, '0');
+        
+        return `${manualVersion}.${year}${monthStr}.${commitCount}`;
+    }
+
+    getCurrentVersion(date = new Date(), useCalculated = false) {
+        if (useCalculated) {
+            return this.getCalculatedVersion(date);
+        }
+        
         const latestTag = this._getLatestTagVersion();
         if (latestTag) {
             return latestTag.substring(1);
         }
-
-        const manualVersion = this._getManualVersion();
-        const dateObj = date || new Date();
-        const commitCount = this._getCommitCountForMonth(dateObj);
-
-        const year = dateObj.getFullYear().toString().slice(-2);
-        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-
-        return `${manualVersion}.${year}${month}.${commitCount}`;
+        
+        return this.getCalculatedVersion(date);
     }
 
     getVersionComponents(date = null) {
@@ -436,5 +455,7 @@ export {
     bumpVersion,
     getVersionComponents,
     initProject,
-    VERSION
+    VERSION,
+    getCalculatedVersion,
+    getCurrentVersion
 }; 

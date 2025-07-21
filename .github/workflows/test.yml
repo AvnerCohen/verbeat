@@ -36,6 +36,10 @@ jobs:
         git config --global user.name "Test User"
         git config --global user.email "test@example.com"
     
+    - name: Install dependencies
+      working-directory: implementations/python
+      run: make install
+    
     - name: Run tests
       working-directory: implementations/python
       run: make test

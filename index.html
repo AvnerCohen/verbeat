@@ -1035,19 +1035,11 @@ jobs:
         });
 
         function loadCurrentVersion() {
-            // Load version from current_version.json file
-            fetch('current_version.json')
-                .then(response => response.json())
-                .then(data => {
-                    const versionBadge = document.querySelector('.version-badge');
-                    if (versionBadge) {
-                        versionBadge.textContent = `v${data.current_version}`;
-                    }
-                })
-                .catch(error => {
-                    console.log('Could not load current version, using fallback');
-                    // Keep the fallback version
-                });
+            const currentVersion = 'CURRENT_VERSION_PLACEHOLDER';
+            const versionBadge = document.querySelector('.version-badge');
+            if (versionBadge) {
+                versionBadge.textContent = `v${currentVersion}`;
+            }
         }
     </script>
 </body>
