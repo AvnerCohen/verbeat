@@ -40,13 +40,16 @@ jobs:
         uv sync
         VERSION=$(uv run python verbeat.py version)
         cd ../..
-        echo "Current version: $VERSION"
+        echo "Current version: '$VERSION'"
+        echo "Version length: ${#VERSION}"
         echo "Checking if placeholder exists:"
         grep "CURRENT_VERSION_PLACEHOLDER" index.html || echo "Placeholder not found!"
         echo "Replacing placeholder in index.html..."
         sed -i "s/CURRENT_VERSION_PLACEHOLDER/$VERSION/g" index.html
         echo "Verification - checking if replacement worked:"
         grep "const currentVersion = '$VERSION';" index.html || echo "Replacement failed!"
+        echo "Final check - showing the line:"
+        grep "const currentVersion = " index.html
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
