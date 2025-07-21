@@ -90,9 +90,10 @@ jobs:
       if: steps.check-version.outputs.should_tag == 'true'
       run: |
         cd implementations/python
-        uv run python scripts/update_website_version.py
+        uv run python ../../scripts/update_website_version.py
         
         # Commit and push the updated version file
-        git add ../../current_version.json
+        cd ../..
+        git add current_version.json
         git commit -m "Update website version to ${{ steps.get-version.outputs.version }}"
         git push origin main 
