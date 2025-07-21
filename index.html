@@ -162,6 +162,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border: 2px solid #e2e8f0;
             border-top: none;
+
         }
 
         .section {
@@ -287,6 +288,7 @@
             font-size: 0.9rem;
             line-height: 1.5;
             color: #e2e8f0;
+            white-space: pre-wrap;
         }
 
         .terminal-content .prompt {
@@ -579,6 +581,7 @@
             .terminal-content {
                 font-size: 0.8rem;
                 padding: 0.75rem;
+                white-space: pre-wrap;
             }
 
             .code-block code {
@@ -626,6 +629,7 @@
             <button class="tab active" onclick="showTab('overview')">Overview</button>
             <button class="tab" onclick="showTab('demo')">Demo</button>
             <button class="tab" onclick="showTab('playbook')">Playbook</button>
+            <button class="tab" onclick="showTab('ci-samples')">CI Samples</button>
         </div>
 
         <div class="content">
@@ -777,7 +781,6 @@
             </div>
 
             <div class="tab-content hidden" id="playbook">
-            <div class="container">
                 <div class="section">
                     <h2>VerBeat Playbook</h2>
                     <p>Follow this step-by-step workflow to get started with VerBeat. This example uses Node.js with <code>npx</code>, but Python users can replace <code>npx verbeat</code> with <code>uvx verbeat</code>.</p>
@@ -793,13 +796,12 @@
                             <span class="terminal-dot green"></span>
                             <span class="terminal-title">Terminal</span>
                         </div>
-                        <div class="terminal-content">
-                            <span class="prompt">$</span> mkdir my-awesome-project<br>
-                            <span class="prompt">$</span> cd my-awesome-project<br>
-                            <span class="prompt">$</span> git init<br>
-                            <span class="prompt">$</span> npx verbeat init "Project kickoff"<br>
-                            <span class="output">Created verbeat.version<br>VerBeat initialized with version: 1.2507.0</span>
-                        </div>
+                        <div class="terminal-content"><span class="prompt">$</span> mkdir my-awesome-project
+<span class="prompt">$</span> cd my-awesome-project
+<span class="prompt">$</span> git init
+<span class="prompt">$</span> npx verbeat init "Project kickoff"
+<span class="output">Created verbeat.version
+VerBeat initialized with version: 1.2507.0</span></div>
                     </div>
                 </div>
 
@@ -813,11 +815,9 @@
                             <span class="terminal-dot green"></span>
                             <span class="terminal-title">Terminal</span>
                         </div>
-                        <div class="terminal-content">
-                            <span class="prompt">$</span> npx verbeat version<br>
-                            <span class="output">1.2507.2</span><br>
-                            <span class="comment"># Shows current version: Manual=1, Date=2507, Commits=2</span>
-                        </div>
+                        <div class="terminal-content"><span class="prompt">$</span> npx verbeat version
+<span class="output">1.2507.2</span>
+<span class="comment"># Shows current version: Manual=1, Date=2507, Commits=2</span></div>
                     </div>
                 </div>
 
@@ -831,15 +831,14 @@
                             <span class="terminal-dot green"></span>
                             <span class="terminal-title">Terminal</span>
                         </div>
-                        <div class="terminal-content">
-                            <span class="prompt">$</span> npx verbeat bump "Breaking API changes"<br>
-                            <span class="output">Bumped to version 2</span><br>
-                            <span class="prompt">$</span> cat verbeat.version<br>
-                            <span class="output">1 # Project kickoff<br>2 # Breaking API changes</span><br>
-                            <span class="prompt">$</span> npx verbeat version<br>
-                            <span class="output">2.2507.2</span><br>
-                            <span class="comment"># Major version bumped from 1 to 2 for breaking changes</span>
-                        </div>
+                        <div class="terminal-content"><span class="prompt">$</span> npx verbeat bump "Breaking API changes"
+<span class="output">Bumped to version 2</span>
+<span class="prompt">$</span> cat verbeat.version
+<span class="output">1 # Project kickoff
+2 # Breaking API changes</span>
+<span class="prompt">$</span> npx verbeat version
+<span class="output">2.2507.2</span>
+<span class="comment"># Major version bumped from 1 to 2 for breaking changes</span></div>
                     </div>
                 </div>
 
@@ -853,12 +852,10 @@
                             <span class="terminal-dot green"></span>
                             <span class="terminal-title">Terminal</span>
                         </div>
-                        <div class="terminal-content">
-                            <span class="prompt">$</span> git add verbeat.version<br>
-                            <span class="prompt">$</span> git commit -m "chore: bump version to 2"<br>
-                            <span class="prompt">$</span> git push origin main<br>
-                            <span class="comment"># CI automatically creates Git tags and updates website version</span>
-                        </div>
+                        <div class="terminal-content"><span class="prompt">$</span> git add verbeat.version
+<span class="prompt">$</span> git commit -m "chore: bump version to 2"
+<span class="prompt">$</span> git push origin main
+<span class="comment"># CI automatically creates Git tags and updates website version</span></div>
                     </div>
                 </div>
 
@@ -872,7 +869,9 @@
 on:
   push:
     branches: [main]
-    tags: ['v*']
+
+permissions:
+  contents: write
 
 jobs:
   release:
@@ -887,15 +886,11 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Install VerBeat
-        run: npm install verbeat
-      
-      - name: Tag Current Version
-        if: github.ref == 'refs/heads/main'
+      - name: Create Git Tag
         run: |
-          version=$(npx verbeat version)
-          git tag -a "v$version" -m "VerBeat v$version ($(date +%Y-%m-%d)): ${{ github.event.head_commit.message }}"
-          git push origin "v$version"
+          VERSION=$(npx verbeat version)
+          git tag -a "v$VERSION" -m "VerBeat $VERSION: ${{ github.event.head_commit.message }}"
+          git push origin "v$VERSION"
       
 </code></pre>
                     </div>
@@ -936,6 +931,172 @@ jobs:
                     </div>
                 </div>
             </div>
+
+            <!-- CI Samples Tab -->
+            <div class="tab-content hidden" id="ci-samples">
+                <div class="section">
+                    <h1>CI/CD Integration Examples</h1>
+                    <p>VerBeat integrates seamlessly with popular CI/CD systems. Here are examples for the most common platforms:</p>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>GitHub Actions</h3>
+                    <p>Most popular for open source projects with native GitHub integration:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <div class="terminal-title">.github/workflows/release.yml</div>
+                        </div>
+                        <div class="terminal-content">name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Create Git Tag
+        run: |
+          VERSION=$(npx verbeat version)
+          git tag -a "v$VERSION" -m "VerBeat $VERSION: ${{ github.event.head_commit.message }}"
+          git push origin "v$VERSION"</div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>Travis CI</h3>
+                    <p>Classic choice for open source projects with simple configuration:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <div class="terminal-title">.travis.yml</div>
+                        </div>
+                        <div class="terminal-content">language: node_js
+node_js: 18
+
+script:
+  - npm test
+
+deploy:
+  provider: script
+  script: |
+    VERSION=$(npx verbeat version)
+    git tag -a "v$VERSION" -m "VerBeat $VERSION: Travis CI release"
+    git push origin "v$VERSION"
+  on:
+    branch: main
+    condition: $TRAVIS_PULL_REQUEST = false</div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>CircleCI</h3>
+                    <p>Popular for complex workflows with excellent Docker support:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <div class="terminal-title">.circleci/config.yml</div>
+                        </div>
+                        <div class="terminal-content">version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:18
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm test
+
+  release:
+    docker:
+      - image: cimg/node:18
+    steps:
+      - checkout
+      - run: |
+          VERSION=$(npx verbeat version)
+          git tag -a "v$VERSION" -m "VerBeat $VERSION: CircleCI release"
+          git push origin "v$VERSION"
+
+workflows:
+  version: 2
+  test-and-release:
+    jobs:
+      - test
+      - release:
+          requires:
+            - test
+          filters:
+            branches:
+              only: main</div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>GitLab CI/CD</h3>
+                    <p>Integrated CI/CD for GitLab repositories with powerful pipelines:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <div class="terminal-title">.gitlab-ci.yml</div>
+                        </div>
+                        <div class="terminal-content">stages:
+  - test
+  - release
+
+test:
+  stage: test
+  image: node:18
+  script:
+    - npm install
+    - npm test
+
+release:
+  stage: release
+  image: node:18
+  script:
+    - VERSION=$(npx verbeat version)
+    - git tag -a "v$VERSION" -m "VerBeat $VERSION: GitLab CI release"
+    - git push origin "v$VERSION"
+  only:
+    - main
+  when: manual</div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>Key Integration Points</h3>
+                    <p>All examples follow these principles:</p>
+                    <ul>
+                        <li><strong>Use <code>npx verbeat version</code></strong> - Gets current version for tag creation</li>
+                        <li><strong>Create tags only on main branch</strong> - Prevents duplicate tags from feature branches</li>
+                        <li><strong>Run tests before release</strong> - Ensures quality before versioning</li>
+                        <li><strong>Use descriptive tag messages</strong> - Includes VerBeat version and CI system</li>
+                    </ul>
+                </div>
+            </div>
         </div>
         </div>
 
@@ -970,7 +1131,7 @@ jobs:
         
         function showTabFromHash() {
             const hash = window.location.hash.substring(1);
-            const validTabs = ['overview', 'demo', 'playbook'];
+            const validTabs = ['overview', 'demo', 'playbook', 'ci-samples'];
             
             if (hash && validTabs.includes(hash)) {
                 // Show tab without updating hash to avoid loop
