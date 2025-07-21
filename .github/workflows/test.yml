@@ -1,0 +1,104 @@
+name: Test VerBeat Implementations
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-python:
+    name: Test Python Implementation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.12', '3.11']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Configure Git for testing
+      run: |
+        git config --global user.name "Test User"
+        git config --global user.email "test@example.com"
+    
+    - name: Run tests
+      working-directory: implementations/python
+      run: make test
+
+
+
+  test-nodejs:
+    name: Test Node.js Implementation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ['20', '18']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Configure Git for testing
+      run: |
+        git config --global user.name "Test User"
+        git config --global user.email "test@example.com"
+    
+    - name: Run tests
+      working-directory: implementations/nodejs
+      run: make test
+
+    - name: Lint Node.js code
+      working-directory: implementations/nodejs
+      run: make lint
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install linting tools
+      run: |
+        python -m pip install flake8 black
+    
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    
+    - name: Lint Python code
+      working-directory: implementations/python
+      run: |
+        make lint
+        make format
+    
+    - name: Check Makefile
+      working-directory: implementations/python
+      run: |
+        make help
+        make clean 

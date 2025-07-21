@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerBeat - A 3D Versioning System for Real-World Dev Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="verbeat_logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2.55rem;
+        }
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+        }
+        .logo-img {
+            height: 130px;
+            width: 130px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            background: white;
+            object-fit: contain;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 
+                0 0 20px rgba(255,255,255,0.8),
+                0 0 40px rgba(255,255,255,0.4),
+                0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+            letter-spacing: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            border-radius: 2px;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 400;
+            margin-bottom: 1.275rem;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+        }
+
+        .tab {
+            padding: 1.5rem 3rem;
+            border: 2px solid transparent;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            background: white;
+            color: #1a1a1a;
+            border-color: #e2e8f0;
+            border-bottom-color: white;
+            z-index: 10;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .content {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            padding: 2.55rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+            border-top: none;
+        }
+
+        .section {
+            margin-bottom: 2.55rem;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.85rem;
+            color: #1a1a1a;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.85rem;
+            color: #1a1a1a;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.64rem;
+            color: #2d3748;
+        }
+
+        p {
+            margin-bottom: 0.85rem;
+            color: #2d3748;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .version-format {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.275rem;
+            margin: 1.275rem 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 1.1rem;
+        }
+
+        .version-format strong {
+            color: #667eea;
+        }
+
+        .semver-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .semver-info h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .semver-info code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+        }
+
+        .playbook-step {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .playbook-step h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .terminal-snippet {
+            background: #2d3748;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-header {
+            background: #4a5568;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #fc8181; }
+        .terminal-dot.yellow { background: #f6e05e; }
+        .terminal-dot.green { background: #68d391; }
+
+        .terminal-title {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .terminal-content {
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .terminal-content .prompt {
+            color: #68d391;
+            font-weight: bold;
+        }
+
+        .terminal-content .output {
+            color: #63b3ed;
+        }
+
+        .terminal-content .error {
+            color: #fc8181;
+        }
+
+        .terminal-content .comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .code-block {
+            background: #2d3748;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-header {
+            background: #4a5568;
+            padding: 0.5rem 1rem;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 120px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .timeline-date {
+            width: 100px;
+            text-align: right;
+            padding-right: 2rem;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .timeline-content {
+            flex: 1;
+            margin-left: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .timeline-content strong {
+            color: #667eea;
+        }
+
+        .timeline-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .benefit-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e0;
+        }
+
+        .benefit-card h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .benefit-card p {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.275rem;
+            margin: 1.7rem 0;
+        }
+
+        .benefit {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 1.275rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .benefit h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .demo-container {
+            text-align: center;
+        }
+
+        .version-display {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: #2d3748;
+            margin: 1.7rem 0;
+            padding: 1.7rem;
+            border: 3px solid #e2e8f0;
+            border-radius: 16px;
+            background: #f7fafc;
+            text-align: center;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.275rem;
+            margin: 1.7rem 0;
+        }
+
+        .control-group {
+            text-align: left;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .control-group input, .control-group button {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .control-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .control-group button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .control-group button:hover {
+            background: #5a67d8;
+        }
+
+
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2.55rem;
+            padding-top: 1.7rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-title {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .version-display {
+                font-size: 2.5rem;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .playbook-step {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+
+            .terminal-content {
+                font-size: 0.8rem;
+                padding: 0.75rem;
+            }
+
+            .code-block code {
+                font-size: 0.75rem;
+            }
+
+            .timeline::before {
+                left: 80px;
+            }
+
+            .timeline-date {
+                width: 70px;
+                padding-right: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .timeline-content {
+                margin-left: 1rem;
+                padding: 0.75rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .benefit-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-row">
+                <img src="verbeat_logo.png" alt="VerBeat Logo" class="logo-img" />
+                <div class="logo">VerBeat</div>
+            </div>
+            <div class="tagline">Manual Intent. Calendar Context. Commit Tempo.</div>
+            <div class="version-badge">v0.1.0</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Overview</button>
+            <button class="tab" onclick="showTab('demo')">Demo</button>
+            <button class="tab" onclick="showTab('playbook')">Playbook</button>
+        </div>
+
+        <div class="content">
+            <!-- About Tab -->
+            <div id="overview" class="tab-content">
+                <div class="section">
+                    <h1>What is VerBeat?</h1>
+                    <p>VerBeat is a 3D versioning system that combines manual semantic milestones with automated time-based and activity-driven versioning. It bridges the gap between traditional semantic versioning and calendar-based approaches, providing a practical solution for modern development workflows.</p>
+                </div>
+
+                <div class="section">
+                    <h2>Why VerBeat?</h2>
+                    <p>Existing versioning systems have fundamental limitations that waste time and provide inadequate information:</p>
+                    
+                    <div class="benefits">
+                        <div class="benefit">
+                            <h4>📅 Calendar Versioning (CalVer)</h4>
+                            <p><strong>Pros:</strong> Automatic, no version decisions needed, clear time context</p>
+                            <p><strong>Problem:</strong> All versions are equal - a version only tells you "when" it was released, not "what" changed or "how significant" it is. You lose semantic meaning entirely.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>🎯 Semantic Versioning (SemVer)</h4>
+                            <p><strong>Pros:</strong> Clear indication of change significance and compatibility</p>
+                            <p><strong>Problem:</strong> Requires constant decision-making about what constitutes "breaking" vs "minor" changes. Teams waste time debating version bumps for 90% of releases where the distinction is meaningless. The complexity often leads to version inflation or inconsistent practices.</p>
+                        </div>
+                    </div>
+                    
+                    <p><strong>VerBeat solves both problems:</strong> You get automatic time-based versioning (like CalVer) while preserving meaningful semantic milestones (like SemVer) - but only when you actually need them. No more version debates for routine releases.</p>
+                </div>
+
+                <div class="section">
+                    <h2>Version Format</h2>
+                    <div class="version-format">
+                        <strong>M</strong>.<strong>YYMM</strong>.<strong>C</strong>
+                    </div>
+                    <p>Where:</p>
+                    <ul>
+                        <li><strong>M</strong> - Manual version bump (semantic milestone)</li>
+                        <li><strong>YYMM</strong> - Year and month (calendar context)</li>
+                        <li><strong>C</strong> - Commit count for the current month (activity tempo)</li>
+                    </ul>
+                    <div class="semver-info">
+                        <h3>SemVer Compliant</h3>
+                        <p>VerBeat follows Semantic Versioning 2.0.0:</p>
+                        <ul>
+                            <li><strong>Major (M)</strong>: Manual semantic milestones</li>
+                            <li><strong>Minor (YYMM)</strong>: Calendar-based versioning</li>
+                            <li><strong>Patch (C)</strong>: Activity-based versioning</li>
+                        </ul>
+                        <p>Versions are stored as Git tags: <code>v{M}.{YYMM}.{C}</code></p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Problems VerBeat Solves</h2>
+                    <div class="benefits">
+                        <div class="benefit">
+                            <h4>🔄 Manual Versioning Pain</h4>
+                            <p>Eliminates tedious manual version bumps while retaining human judgment for meaningful changes.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>⏰ Time Context</h4>
+                            <p>Provides clear temporal context that semantic versioning lacks, making releases more relatable.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>📊 Activity Insight</h4>
+                            <p>Commit count reveals development velocity and iteration intensity at a glance.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>🤖 CI/CD Friendly</h4>
+                            <p>Automated parts reduce merge conflicts and integrate seamlessly with modern pipelines.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>👥 Human Readable</h4>
+                            <p>Clear, intuitive format that's easy to understand and communicate across teams.</p>
+                        </div>
+                        <div class="benefit">
+                            <h4>🎯 Semantic Meaning</h4>
+                            <p>Preserves intentional versioning while adding automated time and activity context.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Example Usage</h2>
+                    <p>Consider a project with the following <code>verbeat.version</code> file:</p>
+                    <div class="code-block">1 # Initial release
+2 # Breaking API changes</div>
+                    
+                    <p>On July 15, 2025, with 14 commits this month, the version would be:</p>
+                    <div class="version-format">2.2507.14</div>
+                    
+                    <p>This tells us: Manual version 2, July 2025, 14 commits this month.</p>
+                </div>
+
+                <div class="section">
+                    <h2>When to Use VerBeat</h2>
+                    <p>VerBeat is ideal for:</p>
+                    <ul>
+                        <li>Internal tools and platforms</li>
+                        <li>SaaS services with regular releases</li>
+                        <li>Fast-paced development projects</li>
+                        <li>API-based services</li>
+                        <li>Projects where release clarity is more valuable than strict compatibility guarantees</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Implementations</h2>
+                    <p>VerBeat implementations are available for:</p>
+                    <ul>
+                        <li><a href="implementations/python/">Python</a> - Complete library with CLI tools</li>
+                        <li><a href="implementations/nodejs/">Node.js</a> - Complete library with CLI tools</li>
+                        <li>More coming soon...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Demo Tab -->
+            <div id="demo" class="tab-content hidden">
+                <div class="demo-container">
+                    <h2>Interactive VerBeat Demo</h2>
+                    <p>Experiment with the VerBeat versioning system in real-time.</p>
+                    
+                    <div class="version-display" id="versionDisplay">2.2507.14</div>
+                    
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="manualVersion">Manual Version (M)</label>
+                            <input type="number" id="manualVersion" value="2" min="1" onchange="updateVersion()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="datePicker">Release Date</label>
+                            <input type="date" id="datePicker" value="2025-07-15" onchange="updateVersion()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>Commit Counter (C)</label>
+                            <input type="number" id="commitCounter" value="14" min="0" onchange="updateVersion()">
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>How it works</h3>
+                        <p>Change the manual version, date, or add commits to see how the VerBeat version updates automatically. The commit counter resets when you change to a new month.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content hidden" id="playbook">
+            <div class="container">
+                <div class="section">
+                    <h2>VerBeat Playbook</h2>
+                    <p>Follow this step-by-step workflow to get started with VerBeat. This example uses Node.js with <code>npx</code>, but Python users can replace <code>npx verbeat</code> with <code>uvx verbeat</code>.</p>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>1. Project Setup</h3>
+                    <p>Start with a new Node.js project and install VerBeat:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <span class="terminal-title">Terminal</span>
+                        </div>
+                        <div class="terminal-content">
+                            <span class="prompt">$</span> mkdir my-awesome-project<br>
+                            <span class="prompt">$</span> cd my-awesome-project<br>
+                            <span class="prompt">$</span> git init<br>
+                            <span class="prompt">$</span> npx verbeat init "Project kickoff"<br>
+                            <span class="output">Created verbeat.version<br>VerBeat initialized with version: 1.2507.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>2. Check Current Version</h3>
+                    <p>Monitor your project's current version during development:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <span class="terminal-title">Terminal</span>
+                        </div>
+                        <div class="terminal-content">
+                            <span class="prompt">$</span> npx verbeat version<br>
+                            <span class="output">1.2507.2</span><br>
+                            <span class="comment"># Shows current version: Manual=1, Date=2507, Commits=2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>3. Major Version Bump (When Needed)</h3>
+                    <p>Only bump the major version for significant releases. In all other cases, version updates automatically:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <span class="terminal-title">Terminal</span>
+                        </div>
+                        <div class="terminal-content">
+                            <span class="prompt">$</span> npx verbeat bump "Breaking API changes"<br>
+                            <span class="output">Bumped to version 2</span><br>
+                            <span class="prompt">$</span> cat verbeat.version<br>
+                            <span class="output">1 # Project kickoff<br>2 # Breaking API changes</span><br>
+                            <span class="prompt">$</span> npx verbeat version<br>
+                            <span class="output">2.2507.2</span><br>
+                            <span class="comment"># Major version bumped from 1 to 2 for breaking changes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>4. Push to CI/CD</h3>
+                    <p>Push your changes to trigger automated version management:</p>
+                    <div class="terminal-snippet">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <span class="terminal-title">Terminal</span>
+                        </div>
+                        <div class="terminal-content">
+                            <span class="prompt">$</span> git add verbeat.version<br>
+                            <span class="prompt">$</span> git commit -m "chore: bump version to 2"<br>
+                            <span class="prompt">$</span> git push origin main<br>
+                            <span class="comment"># CI automatically creates Git tags and updates website version</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>5. CI/CD Automation</h3>
+                    <p>Set up GitHub Actions to handle version management automatically:</p>
+                    <div class="code-block">
+                        <div class="code-header">.github/workflows/release.yml</div>
+                        <pre><code>name: Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install VerBeat
+        run: npm install verbeat
+      
+      - name: Tag Current Version
+        if: github.ref == 'refs/heads/main'
+        run: |
+          version=$(npx verbeat version)
+          git tag -a "v$version" -m "VerBeat v$version ($(date +%Y-%m-%d)): ${{ github.event.head_commit.message }}"
+          git push origin "v$version"
+      
+</code></pre>
+                    </div>
+                </div>
+
+                <div class="playbook-step">
+                    <h3>6. Workflow Summary</h3>
+                    <p>That's it! Your complete VerBeat workflow:</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Setup</div>
+                            <div class="timeline-content">
+                                <strong>Initialize:</strong> <code>npx verbeat init "Project kickoff"</code><br>
+                                Creates <code>verbeat.version</code> file
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Develop</div>
+                            <div class="timeline-content">
+                                <strong>Monitor:</strong> <code>npx verbeat version</code><br>
+                                Version updates automatically with commits
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Release</div>
+                            <div class="timeline-content">
+                                <strong>Bump:</strong> <code>npx verbeat bump "Breaking changes"</code><br>
+                                Only when major version change is needed
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Deploy</div>
+                            <div class="timeline-content">
+                                <strong>Push:</strong> <code>git push origin main</code><br>
+                                CI automatically creates tags and updates website
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-title">VerBeat - A 3D Versioning System for Real-World Dev Flow</p>
+            <p><a href="https://github.com/AvnerCohen/verbeat">GitHub</a> • <a href="implementations/python/">Python</a> • <a href="implementations/nodejs/">Node.js</a></p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Add active class to the correct tab button
+            const activeTab = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+            
+            // Update URL hash
+            window.location.hash = tabName;
+        }
+        
+        function showTabFromHash() {
+            const hash = window.location.hash.substring(1);
+            const validTabs = ['overview', 'demo', 'playbook'];
+            
+            if (hash && validTabs.includes(hash)) {
+                // Show tab without updating hash to avoid loop
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(content => content.classList.add('hidden'));
+                
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                document.getElementById(hash).classList.remove('hidden');
+                
+                const activeTab = document.querySelector(`[onclick="showTab('${hash}')"]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            } else {
+                // Default to overview if no valid hash
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(content => content.classList.add('hidden'));
+                
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                document.getElementById('overview').classList.remove('hidden');
+                
+                const activeTab = document.querySelector(`[onclick="showTab('overview')"]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            }
+        }
+
+        function updateVersion() {
+            const manualVersion = document.getElementById('manualVersion').value;
+            const datePicker = document.getElementById('datePicker');
+            const commitCounter = document.getElementById('commitCounter');
+            
+            const date = new Date(datePicker.value);
+            const year = date.getFullYear().toString().slice(-2);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            
+            const version = `${manualVersion}.${year}${month}.${commitCounter.value}`;
+            document.getElementById('versionDisplay').textContent = version;
+        }
+
+
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            updateVersion();
+            
+            // Show tab based on URL hash or default to overview
+            showTabFromHash();
+            
+            // Load current VerBeat version
+            loadCurrentVersion();
+        });
+        
+        // Handle browser back/forward navigation
+        window.addEventListener('hashchange', function() {
+            showTabFromHash();
+        });
+
+        function loadCurrentVersion() {
+            // Load version from current_version.json file
+            fetch('current_version.json')
+                .then(response => response.json())
+                .then(data => {
+                    const versionBadge = document.querySelector('.version-badge');
+                    if (versionBadge) {
+                        versionBadge.textContent = `v${data.current_version}`;
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load current version, using fallback');
+                    // Keep the fallback version
+                });
+        }
+    </script>
+</body>
+</html> 
