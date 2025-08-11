@@ -40,11 +40,11 @@ describe('VerBeat', () => {
             const verbeat = new VerBeat(tempDir);
             
             const version = verbeat.getCurrentVersion();
-            assert.strictEqual(version, '2.2507.0');
+            assert.strictEqual(version, '2.2508.0');
             
             const [manual, yymm, commits] = verbeat.getVersionComponents();
             assert.strictEqual(manual, 2);
-            assert.strictEqual(yymm, '2507');
+            assert.strictEqual(yymm, '2508');
             assert.strictEqual(commits, 0);
             
             const history = verbeat.getVersionHistory();
@@ -68,11 +68,11 @@ describe('VerBeat', () => {
             fs.writeFileSync(versionFile, '1 # Initial release\n');
             
             const version = getVersion(tempDir);
-            assert.strictEqual(version, '1.2507.0');
+            assert.strictEqual(version, '1.2508.0');
             
             const [manual, yymm, commits] = getVersionComponents(tempDir);
             assert.strictEqual(manual, 1);
-            assert.strictEqual(yymm, '2507');
+            assert.strictEqual(yymm, '2508');
             assert.strictEqual(commits, 0);
             
             const newVersion = bumpVersion('Test', tempDir);
@@ -91,11 +91,11 @@ describe('VerBeat', () => {
             const versionFile = path.join(tempPath, 'verbeat.version');
             fs.writeFileSync(versionFile, '1 # Initial release\n');
 
-            const testDate = new Date(2025, 6, 15);
+            const testDate = new Date(2025, 7, 15);
             const verbeat = new VerBeat(tempPath);
             const version = verbeat.getCurrentVersion(testDate);
 
-            assert.strictEqual(version, '1.2507.0');
+            assert.strictEqual(version, '1.2508.0');
         } finally {
             cleanupTempDir(tempDir);
         }
@@ -262,17 +262,17 @@ describe('VerBeat', () => {
             execSync('git commit -m "Initial commit"', { cwd: tempPath });
 
             execSync(
-                'git tag -a "v1.2507.5" -m "VerBeat 1.2507.5 (2025-07-15): Test tag"',
+                'git tag -a "v1.2508.5" -m "VerBeat 1.2508.5 (2025-08-15): Test tag"',
                 { cwd: tempPath }
             );
 
             const verbeat = new VerBeat(tempPath);
 
             const version = verbeat.getCurrentVersion();
-            assert.strictEqual(version, '1.2507.5');
+            assert.strictEqual(version, '1.2508.5');
 
             const [manual, yymm, commits] = verbeat.getVersionComponents();
-            assert.deepStrictEqual([manual, yymm, commits], [1, '2507', 5]);
+            assert.deepStrictEqual([manual, yymm, commits], [1, '2508', 5]);
         } finally {
             fs.rmSync(tempDir, { recursive: true, force: true });
         }
@@ -302,15 +302,15 @@ describe('VerBeat', () => {
                 execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
             }
             
-            execSync('git tag -a v2.2507.2 -m "Old tag"', { cwd: projectRoot });
+            execSync('git tag -a v2.2508.2 -m "Old tag"', { cwd: projectRoot });
             
             const verbeat = new VerBeat(projectRoot);
             
             const currentVersion = verbeat.getCurrentVersion();
             const calculatedVersion = verbeat.getCalculatedVersion();
             
-            assert.strictEqual(currentVersion, '2.2507.2');
-            assert.strictEqual(calculatedVersion, '2.2507.5');
+            assert.strictEqual(currentVersion, '2.2508.2');
+            assert.strictEqual(calculatedVersion, '2.2508.5');
         } finally {
             cleanupTempDir(tempDir);
         }
@@ -340,13 +340,13 @@ describe('VerBeat', () => {
                 execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
             }
             
-            execSync('git tag -a v1.2507.1 -m "Old tag"', { cwd: projectRoot });
+            execSync('git tag -a v1.2508.1 -m "Old tag"', { cwd: projectRoot });
             
             const calculatedVersion = getCalculatedVersion(projectRoot);
             const currentVersion = getCurrentVersion(projectRoot);
             
-            assert.strictEqual(calculatedVersion, '1.2507.3');
-            assert.strictEqual(currentVersion, '1.2507.1');
+            assert.strictEqual(calculatedVersion, '1.2508.3');
+            assert.strictEqual(currentVersion, '1.2508.1');
         } finally {
             cleanupTempDir(tempDir);
         }
@@ -376,13 +376,13 @@ describe('VerBeat', () => {
                 execSync(`git commit -m "commit ${i}"`, { cwd: projectRoot });
             }
             
-            execSync('git tag -a v3.2507.2 -m "Old tag"', { cwd: projectRoot });
+            execSync('git tag -a v3.2508.2 -m "Old tag"', { cwd: projectRoot });
             
             const currentVersion = getCurrentVersion(projectRoot);
             const calculatedVersion = getCurrentVersion(projectRoot, new Date(), true);
             
-            assert.strictEqual(currentVersion, '3.2507.2');
-            assert.strictEqual(calculatedVersion, '3.2507.4');
+            assert.strictEqual(currentVersion, '3.2508.2');
+            assert.strictEqual(calculatedVersion, '3.2508.4');
         } finally {
             cleanupTempDir(tempDir);
         }

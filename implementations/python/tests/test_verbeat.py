@@ -31,11 +31,11 @@ def test_basic_functionality():
         verbeat = VerBeat(temp_path)
 
         version = verbeat.get_current_version()
-        assert version == "2.2507.0"
+        assert version == "2.2508.0"
 
         manual, yymm, commits = verbeat.get_version_components()
         assert manual == 2
-        assert yymm == "2507"
+        assert yymm == "2508"
         assert commits == 0
 
         history = verbeat.get_version_history()
@@ -58,11 +58,11 @@ def test_convenience_functions():
             f.write("1 # Initial release\n")
 
         version = get_version(temp_path)
-        assert version == "1.2507.0"
+        assert version == "1.2508.0"
 
         manual, yymm, commits = get_version_components(temp_path)
         assert manual == 1
-        assert yymm == "2507"
+        assert yymm == "2508"
         assert commits == 0
 
         new_version = bump_version("Test", temp_path)
@@ -153,7 +153,7 @@ def test_init_command():
         from verbeat import VerBeat
 
         verbeat = VerBeat(temp_path)
-        assert verbeat.get_current_version() == "1.2507.0"
+        assert verbeat.get_current_version() == "1.2508.0"
 
 
 def test_init_command_existing_file():
@@ -201,9 +201,9 @@ def test_tag_based_version():
                 "git",
                 "tag",
                 "-a",
-                "v1.2507.5",
+                "v1.2508.5",
                 "-m",
-                "VerBeat 1.2507.5 (2025-07-15): Test tag",
+                "VerBeat 1.2508.5 (2025-08-15): Test tag",
             ],
             cwd=temp_path,
             check=True,
@@ -212,10 +212,10 @@ def test_tag_based_version():
         verbeat = VerBeat(temp_path)
 
         version = verbeat.get_current_version()
-        assert version == "1.2507.5"
+        assert version == "1.2508.5"
 
         manual, yymm, commits = verbeat.get_version_components()
-        assert (manual, yymm, commits) == (1, "2507", 5)
+        assert (manual, yymm, commits) == (1, "2508", 5)
 
 
 def test_get_calculated_version_ignores_tags(tmp_path):
@@ -246,7 +246,7 @@ def test_get_calculated_version_ignores_tags(tmp_path):
         )
 
     subprocess.run(
-        ["git", "tag", "-a", "v2.2507.2", "-m", "Old tag"], cwd=project_root, check=True
+        ["git", "tag", "-a", "v2.2508.2", "-m", "Old tag"], cwd=project_root, check=True
     )
 
     verbeat = VerBeat(str(project_root))
@@ -254,8 +254,8 @@ def test_get_calculated_version_ignores_tags(tmp_path):
     current_version = verbeat.get_current_version()
     calculated_version = verbeat.get_calculated_version()
 
-    assert current_version == "2.2507.2"
-    assert calculated_version == "2.2507.5"
+    assert current_version == "2.2508.2"
+    assert calculated_version == "2.2508.5"
 
 
 def test_get_calculated_version_function(tmp_path):
@@ -286,7 +286,7 @@ def test_get_calculated_version_function(tmp_path):
         )
 
     subprocess.run(
-        ["git", "tag", "-a", "v1.2507.1", "-m", "Old tag"], cwd=project_root, check=True
+        ["git", "tag", "-a", "v1.2508.1", "-m", "Old tag"], cwd=project_root, check=True
     )
 
     sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -295,8 +295,8 @@ def test_get_calculated_version_function(tmp_path):
     calculated_version = get_calculated_version(str(project_root))
     current_version = get_version(str(project_root))
 
-    assert calculated_version == "1.2507.3"
-    assert current_version == "1.2507.1"
+    assert calculated_version == "1.2508.3"
+    assert current_version == "1.2508.1"
 
 
 def test_get_version_with_use_calculated_param(tmp_path):
@@ -327,7 +327,7 @@ def test_get_version_with_use_calculated_param(tmp_path):
         )
 
     subprocess.run(
-        ["git", "tag", "-a", "v3.2507.2", "-m", "Old tag"], cwd=project_root, check=True
+        ["git", "tag", "-a", "v3.2508.2", "-m", "Old tag"], cwd=project_root, check=True
     )
 
     sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -336,5 +336,5 @@ def test_get_version_with_use_calculated_param(tmp_path):
     current_version = get_version(str(project_root))
     calculated_version = get_version(str(project_root), use_calculated=True)
 
-    assert current_version == "3.2507.2"
-    assert calculated_version == "3.2507.4"
+    assert current_version == "3.2508.2"
+    assert calculated_version == "3.2508.4"

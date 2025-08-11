@@ -1,4 +1,4 @@
-.PHONY: test clean install lint format help build publish update-version
+.PHONY: test clean install lint format help build
 
 help:
 	@echo "Available targets:"
@@ -8,8 +8,6 @@ help:
 	@echo "  lint     - Run linting (requires eslint)"
 	@echo "  format   - Format code (requires prettier)"
 	@echo "  build    - Build package for distribution"
-	@echo "  publish  - Build and publish to npm"
-	@echo "  update-version - Update package version to match VerBeat"
 
 test:
 	@echo "Running VerBeat Node.js implementation tests..."
@@ -24,7 +22,7 @@ clean:
 
 install:
 	@echo "Installing Node.js dependencies..."
-	@npm install
+	@yarn install
 
 lint:
 	@echo "Linting code..."
@@ -42,14 +40,6 @@ format:
 		echo "npx not found. Install with: npm install -g npx"; \
 	fi
 
-update-version:
-	@echo "Updating package version to match VerBeat..."
-	@npm run update-version
-
-build: update-version
+build:
 	@echo "Building Node.js package..."
-	@npm pack
-
-publish: update-version
-	@echo "Publishing to npm..."
-	@npm publish 
+	@yarn pack 

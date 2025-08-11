@@ -32,7 +32,7 @@ function getVersion(projectRoot = null, date = null) {
 
     const projectRootPath = _findProjectRoot();
     if (!projectRootPath) {
-        return '1.2507.0';
+        return '1.2508.0';
     }
 
     const verbeat = new VerBeat(projectRootPath);
@@ -48,7 +48,7 @@ function getVersionComponents(projectRoot = null, date = null) {
 
     const projectRootPath = _findProjectRoot();
     if (!projectRootPath) {
-        return [1, '2507', 0];
+        return [1, '2508', 0];
     }
 
     const verbeat = new VerBeat(projectRootPath);

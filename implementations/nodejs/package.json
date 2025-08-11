@@ -1,6 +1,6 @@
 {
   "name": "verbeat",
-  "version": "0.0.0-development",
+  "version": "CURRENT_VERSION_PLACEHOLDER",
   "description": "VerBeat - A 3D Versioning System for Real-World Dev Flow",
   "main": "src/verbeat.js",
   "bin": {
@@ -10,7 +10,7 @@
     "test": "node --test tests/*.js",
     "lint": "eslint src/ tests/ bin/",
     "format": "prettier --write src/ tests/ bin/",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "yarn test"
   },
   "keywords": [
     "versioning",
