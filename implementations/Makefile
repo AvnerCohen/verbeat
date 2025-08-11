@@ -22,7 +22,7 @@ update-version-python:
 publish-nodejs: update-version-nodejs
 	@echo "Publishing Node.js package to NPM..."
 	@cd nodejs && yarn test
-	@cd nodejs && yarn publish
+	@cd nodejs && yarn publish --new-version $$(node -p "require('./package.json').version")
 	@echo "Resetting Node.js version to placeholder..."
 	@cd nodejs && sed -i '' 's/"version": "[^"]*"/"version": "CURRENT_VERSION_PLACEHOLDER"/' package.json
 
