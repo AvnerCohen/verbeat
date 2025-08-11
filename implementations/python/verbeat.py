@@ -39,7 +39,12 @@ def _get_verbeat_version() -> str:
             except Exception:
                 continue
 
-    return "1.2507.0"
+    # Dynamic fallback - use current date instead of hardcoded month
+    from datetime import datetime
+    now = datetime.now()
+    year = str(now.year)[-2:]
+    month = f"{now.month:02d}"
+    return f"1.{year}{month}.0"
 
 
 def _find_project_root() -> Optional[Path]:

@@ -32,7 +32,11 @@ function getVersion(projectRoot = null, date = null) {
 
     const projectRootPath = _findProjectRoot();
     if (!projectRootPath) {
-        return '1.2508.0';
+        // Dynamic fallback - use current date instead of hardcoded month
+        const now = new Date();
+        const year = now.getFullYear().toString().slice(-2);
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        return `1.${year}${month}.0`;
     }
 
     const verbeat = new VerBeat(projectRootPath);
@@ -48,7 +52,11 @@ function getVersionComponents(projectRoot = null, date = null) {
 
     const projectRootPath = _findProjectRoot();
     if (!projectRootPath) {
-        return [1, '2508', 0];
+        // Dynamic fallback - use current date instead of hardcoded month
+        const now = new Date();
+        const year = now.getFullYear().toString().slice(-2);
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        return [1, `${year}${month}`, 0];
     }
 
     const verbeat = new VerBeat(projectRootPath);
